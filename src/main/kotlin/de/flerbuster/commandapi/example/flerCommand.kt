@@ -2,6 +2,7 @@ package de.flerbuster.commandapi.example
 
 import de.flerbuster.commandapi.builder.slashCommand
 import dev.kord.core.Kord
+import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.interaction.respondPublic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -26,7 +27,18 @@ val flerCommand = slashCommand("fler", "fler", kord) {
                 content = "${interaction.user.mention} likes fler :D"
             }
         } else {
-            interaction.user.publicFlags
+            interaction.user.getDmChannel().createEmbed {
+                title = "fler"
+                description = "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW\n" +
+                        "Frank White jagt euch mit dem BMW, BMW"
+            }
         }
     }
 }
