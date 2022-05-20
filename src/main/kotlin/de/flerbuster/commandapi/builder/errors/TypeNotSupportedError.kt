@@ -1,3 +1,3 @@
-package de.flerbuster.commandapi.builder.errors
+package commandApi.builder.errors
 
 class TypeNotSupportedError(s: String) : RuntimeException(s)

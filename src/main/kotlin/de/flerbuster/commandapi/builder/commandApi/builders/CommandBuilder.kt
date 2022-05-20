@@ -1,14 +1,15 @@
-package de.flerbuster.commandapi.builder.command.builders
+package commandApi.builder.command.builders
 
-import de.flerbuster.commandapi.builder.command.arguments.argument.Argument
-import de.flerbuster.commandapi.builder.command.arguments.argument.ArgumentBuilder
-import de.flerbuster.commandapi.builder.command.arguments.type.ArgTypes
-import de.flerbuster.commandapi.builder.command.commands.Command
-import de.flerbuster.commandapi.builder.command.options.Options
-import de.flerbuster.commandapi.builder.errors.TypeNotSupportedError
+import commandApi.builder.command.arguments.argument.Argument
+import commandApi.builder.command.arguments.argument.ArgumentBuilder
+import commandApi.builder.command.arguments.type.ArgTypes
+import commandApi.builder.command.commands.Command
+import commandApi.builder.command.options.Options
+import commandApi.builder.errors.TypeNotSupportedError
 import dev.kord.core.Kord
 import dev.kord.core.entity.interaction.ApplicationCommandInteraction
 import dev.kord.core.entity.interaction.GlobalApplicationCommandInteraction
+import dev.kord.core.entity.interaction.GuildApplicationCommandInteraction
 
 sealed class CommandBuilder<T : Command<*>>(
     open val name: String,
@@ -17,7 +18,7 @@ sealed class CommandBuilder<T : Command<*>>(
 ) {
     val arguments: MutableList<Argument> = mutableListOf()
     var defaultRequired = true
-    internal var execution: suspend (interaction: GlobalApplicationCommandInteraction, options: Options) -> Unit = { _, _ -> }
+    internal var execution: suspend (interaction: GuildApplicationCommandInteraction, options: Options) -> Unit = { _, _ -> }
     internal var onInit: suspend T.() -> Unit = {  }
 
     fun runs(block: suspend (ApplicationCommandInteraction, Options) -> Unit) {

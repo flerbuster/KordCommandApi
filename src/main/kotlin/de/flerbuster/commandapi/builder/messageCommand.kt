@@ -1,8 +1,8 @@
-package de.flerbuster.commandapi.builder
+package commandApi.builder
 
-import de.flerbuster.commandapi.builder.command.builders.CommandBuilder
-import de.flerbuster.commandapi.builder.command.commands.MessageCommand
-import de.flerbuster.commandapi.builder.command.builders.MessageCommandBuilder
+import commandApi.builder.command.builders.CommandBuilder
+import commandApi.builder.command.commands.MessageCommand
+import commandApi.builder.command.builders.MessageCommandBuilder
 import dev.kord.core.Kord
 import kotlinx.coroutines.DelicateCoroutinesApi
 

@@ -1,4 +1,4 @@
-package de.flerbuster.commandapi.builder.command.commands
+package commandApi.builder.command.commands
 
 import dev.kord.core.Kord
 import kotlinx.coroutines.CoroutineScope

@@ -1,6 +1,6 @@
-package de.flerbuster.commandapi.builder.command.arguments.argument
+package commandApi.builder.command.arguments.argument
 
-import de.flerbuster.commandapi.builder.command.arguments.type.ArgTypes
+import commandApi.builder.command.arguments.type.ArgTypes
 
 class ArgumentBuilder(
     private var type: ArgTypes,
