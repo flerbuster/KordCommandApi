@@ -1,11 +1,12 @@
-package commandApi.builder.command.options
+package de.flerbuster.commandApi.builder.command.options
 
 import dev.kord.core.entity.*
 import dev.kord.core.entity.channel.ResolvedChannel
-import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.core.entity.interaction.InteractionCommand
 
-class Options(val command: InteractionCommand?) {
+class Options(
+    val command: InteractionCommand?
+) {
     val strings: Map<String, String> get() = command?.strings ?: mapOf()
 
     val integers: Map<String, Long> get() = command?.integers ?: mapOf()
@@ -25,6 +26,15 @@ class Options(val command: InteractionCommand?) {
     val mentionables: Map<String, Entity> get() = command?.mentionables ?: mapOf()
 
     val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
+
+    operator fun <T : Comparable<T>> get(at: String): T? {
+        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T ?: null
+    }
+
+    @JvmName("get2")
+    operator fun get(at: String): Comparable<*>? {
+        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]
+    }
 
     fun isEmpty(): Boolean {
         return command?.options?.isEmpty() ?: true

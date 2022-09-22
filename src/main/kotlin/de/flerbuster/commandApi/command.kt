@@ -1,10 +1,10 @@
-package commandApi.builder
+package de.flerbuster.commandApi.builder
 
-import commandApi.builder.command.builders.CommandBuilder
-import commandApi.builder.command.commands.Command
-import commandApi.builder.command.commands.MessageCommand
-import commandApi.builder.command.commands.SlashCommand
-import commandApi.builder.errors.TypeNotSupportedError
+import de.flerbuster.commandApi.builder.command.builders.CommandBuilder
+import de.flerbuster.commandApi.builder.command.commands.Command
+import de.flerbuster.commandApi.builder.command.commands.MessageCommand
+import de.flerbuster.commandApi.builder.command.commands.SlashCommand
+import de.flerbuster.commandApi.builder.errors.TypeNotSupportedError
 import dev.kord.core.Kord
 import kotlinx.coroutines.DelicateCoroutinesApi
 

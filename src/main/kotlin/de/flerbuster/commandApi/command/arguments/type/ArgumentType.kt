@@ -1,10 +1,10 @@
-package commandApi.builder.command.arguments.type
+package de.flerbuster.commandApi.builder.command.arguments.type
 
 import dev.kord.common.entity.*
 import dev.kord.core.entity.interaction.GroupCommand
 import kotlin.reflect.KClass
 
-enum class ArgTypes(
+enum class ArgumentType(
     vararg val types: KClass<*>
 ) {
     String(
@@ -19,7 +19,7 @@ enum class ArgTypes(
         DiscordGuildApplicationCommandPermission.Type.User::class,
         ApplicationCommandType.User::class
     ),
-    Mentionable(
+     Mentionable(
         ApplicationCommandOptionType.Mentionable::class,
         AuditLogChangeKey.Mentionable::class
     ),
@@ -44,6 +44,14 @@ enum class ArgTypes(
     Int(
         kotlin.Int::class,
     ),
+    Number(
+        kotlin.Number::class,
+        Double::class
+    ),
+    Attachment(
+        dev.kord.core.entity.Attachment::class,
+        ApplicationCommandOptionType.Attachment::class
+    ),
     None(
         Nothing::class
     );
@@ -51,7 +59,9 @@ enum class ArgTypes(
     companion object {
         inline fun <reified T> from(
             type: KClass<*> = T::class
-        ): ArgTypes? = values().firstOrNull { type in it.types }
+        ): ArgumentType? = values().firstOrNull {
+            type in it.types || it::class == type
+        }
     }
 
 }

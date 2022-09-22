@@ -1,8 +1,8 @@
-package commandApi.builder
+package de.flerbuster.commandApi.builder
 
-import commandApi.builder.command.builders.CommandBuilder
-import commandApi.builder.command.commands.MessageCommand
-import commandApi.builder.command.builders.MessageCommandBuilder
+import de.flerbuster.commandApi.builder.command.builders.CommandBuilder
+import de.flerbuster.commandApi.builder.command.commands.MessageCommand
+import de.flerbuster.commandApi.builder.command.builders.MessageCommandBuilder
 import dev.kord.core.Kord
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -15,6 +15,6 @@ fun messageCommand(
     builder: CommandBuilder<MessageCommand>.() -> Unit
 ): MessageCommand {
     val command = MessageCommandBuilder(name.lowercase() , description, kord).apply(builder).build()
-    if (register) command.add()
+    if (register) command.register()
     return command
 }
