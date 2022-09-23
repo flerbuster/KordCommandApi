@@ -27,13 +27,16 @@ class Options(
 
     val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
 
+    @Suppress("UNCHECKED_CAST")
     operator fun <T : Comparable<T>> get(at: String): T? {
-        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
+        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at]
+        ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
     }
 
     @JvmName("get2")
     operator fun get(at: String): Comparable<*>? {
-        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]
+        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at]
+        ?: roles[at] ?: mentionables[at] ?: attachments[at]
     }
 
     fun isEmpty(): Boolean {
@@ -53,7 +56,7 @@ class Options(
                 "roles=$roles, " +
                 "mentionables=$mentionables, " +
                 "attachments=$attachments" +
-        ")"
+                ")"
     }
 
 }
