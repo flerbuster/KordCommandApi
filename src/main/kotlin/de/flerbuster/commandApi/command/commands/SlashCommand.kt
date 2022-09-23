@@ -1,8 +1,8 @@
-package de.flerbuster.commandApi.builder.command.commands
+package de.flerbuster.commandApi.command.commands
 
-import de.flerbuster.commandApi.builder.command.arguments.argument.Argument
-import de.flerbuster.commandApi.builder.command.arguments.type.ArgumentType
-import de.flerbuster.commandApi.builder.command.options.Options
+import de.flerbuster.commandApi.command.arguments.argument.Argument
+import de.flerbuster.commandApi.command.arguments.type.ArgumentType
+import de.flerbuster.commandApi.command.options.Options
 import dev.kord.core.Kord
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.core.event.interaction.*

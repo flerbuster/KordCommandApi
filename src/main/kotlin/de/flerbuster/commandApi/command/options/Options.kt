@@ -1,4 +1,4 @@
-package de.flerbuster.commandApi.builder.command.options
+package de.flerbuster.commandApi.command.options
 
 import dev.kord.core.entity.*
 import dev.kord.core.entity.channel.ResolvedChannel

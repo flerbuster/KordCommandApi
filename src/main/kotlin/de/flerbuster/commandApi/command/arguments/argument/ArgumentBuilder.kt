@@ -1,4 +1,4 @@
-package de.flerbuster.commandApi.builder.command.arguments.argument
+package de.flerbuster.commandApi.command.arguments.argument
 
 import dev.kord.rest.builder.interaction.OptionsBuilder
 

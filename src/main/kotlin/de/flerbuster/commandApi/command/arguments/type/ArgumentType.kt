@@ -1,4 +1,4 @@
-package de.flerbuster.commandApi.builder.command.arguments.type
+package de.flerbuster.commandApi.command.arguments.type
 
 import dev.kord.common.entity.*
 import dev.kord.core.entity.interaction.GroupCommand

@@ -1,6 +1,6 @@
-package de.flerbuster.commandApi.builder.command.builders
+package de.flerbuster.commandApi.command.builders
 
-import de.flerbuster.commandApi.builder.command.commands.SlashCommand
+import de.flerbuster.commandApi.command.commands.SlashCommand
 import dev.kord.core.Kord
 
 class SlashCommandBuilder(

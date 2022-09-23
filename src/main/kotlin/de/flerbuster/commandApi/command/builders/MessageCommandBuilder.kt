@@ -1,6 +1,6 @@
-package de.flerbuster.commandApi.builder.command.builders
+package de.flerbuster.commandApi.command.builders
 
-import de.flerbuster.commandApi.builder.command.commands.MessageCommand
+import de.flerbuster.commandApi.command.commands.MessageCommand
 import dev.kord.core.Kord
 
 class MessageCommandBuilder(

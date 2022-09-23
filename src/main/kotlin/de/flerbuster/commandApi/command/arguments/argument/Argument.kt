@@ -1,6 +1,6 @@
-package de.flerbuster.commandApi.builder.command.arguments.argument
+package de.flerbuster.commandApi.command.arguments.argument
 
-import de.flerbuster.commandApi.builder.command.arguments.type.ArgumentType
+import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
 
 data class Argument<T>(

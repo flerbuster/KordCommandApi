@@ -1,3 +1,3 @@
-package de.flerbuster.commandApi.builder.errors
+package de.flerbuster.commandApi.errors
 
 class TypeNotSupportedError(s: String) : IllegalArgumentException(s)

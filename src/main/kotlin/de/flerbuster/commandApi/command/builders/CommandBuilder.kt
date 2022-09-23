@@ -1,11 +1,11 @@
-package de.flerbuster.commandApi.builder.command.builders
+package de.flerbuster.commandApi.command.builders
 
-import de.flerbuster.commandApi.builder.command.arguments.argument.Argument
-import de.flerbuster.commandApi.builder.command.arguments.argument.ArgumentBuilder
-import de.flerbuster.commandApi.builder.command.arguments.type.ArgumentType
-import de.flerbuster.commandApi.builder.command.commands.Command
-import de.flerbuster.commandApi.builder.command.options.Options
-import de.flerbuster.commandApi.builder.errors.TypeNotSupportedError
+import de.flerbuster.commandApi.command.arguments.argument.Argument
+import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
+import de.flerbuster.commandApi.command.arguments.type.ArgumentType
+import de.flerbuster.commandApi.command.commands.Command
+import de.flerbuster.commandApi.command.options.Options
+import de.flerbuster.commandApi.errors.TypeNotSupportedError
 import dev.kord.core.Kord
 import dev.kord.core.entity.interaction.ApplicationCommandInteraction
 import dev.kord.core.entity.interaction.GuildApplicationCommandInteraction
