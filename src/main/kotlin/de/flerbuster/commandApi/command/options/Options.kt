@@ -28,7 +28,7 @@ class Options(
     val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
 
     operator fun <T : Comparable<T>> get(at: String): T? {
-        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T ?: null
+        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
     }
 
     @JvmName("get2")
