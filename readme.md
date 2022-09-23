@@ -3,7 +3,7 @@
 
 ``` kotlin
 val flerCommand = slashCommand("fler", "fler",  kord) {
-    argument<User>("user", "user who gets flered") {
+    basicArgument<User>("user", "user who gets flered") {
         required = true
     }
 
