@@ -2,6 +2,7 @@ package de.flerbuster.commandApi.command.builders
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
 import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
+import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.Command
 import de.flerbuster.commandApi.command.options.Options
@@ -33,6 +34,19 @@ sealed class CommandBuilder<T : Command<*>>(
         noinline builder: BaseChoiceBuilder<T>.() -> Unit = { }
     ): Argument<T> {
         return addArgument(name, description, builder as OptionsBuilder.() -> Unit)
+    }
+
+    inline fun customArgument(
+        name: String,
+        description: String,
+        noinline builder: CustomArgumentBuilder.() -> Unit = { }
+    ): Argument<String> {
+        return argument(
+            name,
+            description,
+            CustomArgumentBuilder(name, description)
+                .apply(builder).toBaseChoiceBuilder()
+        )
     }
 
     inline fun <reified T> basicArgument(

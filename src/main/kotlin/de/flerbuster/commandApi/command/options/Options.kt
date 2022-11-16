@@ -3,6 +3,8 @@ package de.flerbuster.commandApi.command.options
 import dev.kord.core.entity.*
 import dev.kord.core.entity.channel.ResolvedChannel
 import dev.kord.core.entity.interaction.InteractionCommand
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class Options(
     val command: InteractionCommand?
@@ -26,6 +28,19 @@ class Options(
     val mentionables: Map<String, Entity> get() = command?.mentionables ?: mapOf()
 
     val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
+
+    inline fun <reified T> custom(json: Json = Json): HashMap<String, T> {
+        val withTypeT = hashMapOf<String, T>()
+
+        strings.forEach { (key, value) ->
+            try {
+                withTypeT += key to json.decodeFromString(value)
+            } catch (_: Exception) {
+            }
+        }
+
+        return withTypeT
+    }
 
     @Suppress("UNCHECKED_CAST")
     operator fun <T : Comparable<T>> get(at: String): T? {
