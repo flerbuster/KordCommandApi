@@ -12,6 +12,7 @@ import dev.kord.core.entity.interaction.ApplicationCommandInteraction
 import dev.kord.core.entity.interaction.GuildApplicationCommandInteraction
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
+import kotlin.reflect.KClass
 
 sealed class CommandBuilder<T : Command<*>>(
     open val name: String,
@@ -22,10 +23,34 @@ sealed class CommandBuilder<T : Command<*>>(
     var defaultRequired = false
     internal var execution: suspend (interaction: GuildApplicationCommandInteraction, options: Options) -> Unit =
         { _, _ -> }
+    val exceptionHandlers: HashMap<KClass<Exception>, suspend (
+        exception: Exception,
+        interaction: GuildApplicationCommandInteraction,
+        command: T
+    ) -> Unit> = hashMapOf()
 
     fun runs(block: suspend (ApplicationCommandInteraction, Options) -> Unit) {
         execution = block
     }
+
+     fun catches(
+        exception: KClass<Exception>,
+         block: suspend (
+            exception: Exception,
+            interaction: GuildApplicationCommandInteraction,
+            command: T
+        ) -> Unit
+    ) {
+        exceptionHandlers[exception] = block
+    }
+
+    inline fun <reified E : Exception> catches(
+        noinline block: suspend (
+            exception: Exception,
+            interaction: GuildApplicationCommandInteraction,
+            command: T
+        ) -> Unit
+    ) = catches(E::class as KClass<Exception>, block)
 
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T> argument(

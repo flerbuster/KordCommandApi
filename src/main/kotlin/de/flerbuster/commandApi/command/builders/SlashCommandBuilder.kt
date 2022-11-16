@@ -8,5 +8,5 @@ class SlashCommandBuilder(
     override val description: String,
     override val kord: Kord
 ) : CommandBuilder<SlashCommand>(name, description, kord) {
-    override fun build() = SlashCommand(name, description, arguments, execution, kord)
+    override fun build() = SlashCommand(name, description, arguments, execution, exceptionHandlers, kord)
 }

@@ -4,16 +4,23 @@ import de.flerbuster.commandApi.command.arguments.argument.Argument
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.options.Options
 import dev.kord.core.Kord
+import dev.kord.core.entity.interaction.GuildApplicationCommandInteraction
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.core.event.interaction.*
 import dev.kord.core.on
 import dev.kord.rest.builder.interaction.*
+import kotlin.reflect.KClass
 
 class SlashCommand(
     val name: String,
     val description: String,
     private val arguments: MutableList<Argument<*>>,
     private val execution: suspend (interaction: GuildChatInputCommandInteraction, options: Options) -> Unit,
+    private val exceptionHandling: HashMap<KClass<Exception>, suspend (
+        exception: Exception,
+        interaction: GuildApplicationCommandInteraction,
+        command: SlashCommand
+    ) -> Unit>,
     private val kord: Kord
 ) : Command<SlashCommand>(name, kord) {
     @Suppress("UNCHECKED_CAST")
@@ -95,8 +102,15 @@ class SlashCommand(
                     execution(interaction as GuildChatInputCommandInteraction, Options(interaction.command))
                 }
             } catch (e: Exception) {
-                println("error '$e' at command '$name'")
-                e.printStackTrace()
+                exceptionHandling.forEach { (type, handler) ->
+                    if (type.isInstance(e)) {
+                        handler(
+                            e,
+                            interaction as GuildChatInputCommandInteraction,
+                            this@SlashCommand
+                        )
+                    }
+                }
             }
         }
     }
