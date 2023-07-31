@@ -1,20 +1,26 @@
 package de.flerbuster.commandApi.command.arguments.argument
 
 import dev.kord.common.annotation.KordDsl
+import dev.kord.common.entity.ApplicationCommandOption
+import dev.kord.common.entity.ApplicationCommandOptionType
 import dev.kord.common.entity.Choice
 import dev.kord.common.entity.optional.Optional
 import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.common.entity.optional.delegate.delegate
+import dev.kord.rest.builder.RequestBuilder
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+/** das ist von kord geklaut
+ *  [dev.kord.rest.builder.interaction.OptionsBuilder]
+ **/
 
 @KordDsl
 class CustomArgumentBuilder(
     val name: String,
     val description: String
-) {
+) : RequestBuilder<ApplicationCommandOption> {
     private var _default: OptionalBoolean = OptionalBoolean.Missing
     var default: Boolean? by ::_default.delegate()
 
@@ -49,4 +55,13 @@ class CustomArgumentBuilder(
             choice(it.name, it.value)
         }
     }
+
+    override fun toRequest(): ApplicationCommandOption = ApplicationCommandOption(
+        ApplicationCommandOptionType.String,
+        name,
+        description,
+        _default,
+        _required,
+        autocomplete = _autocomplete
+    )
 }

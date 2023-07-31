@@ -5,10 +5,11 @@ import dev.kord.core.entity.Entity
 import kotlinx.coroutines.launch
 
 sealed class Command<T : Command<T>> (
-    private val name: String,
+    open val name: String,
     private val kord: Kord
 ) {
     internal lateinit var command: Entity
+    val commandId get() = command.id
 
     abstract suspend fun init()
 

@@ -19,7 +19,11 @@ enum class ArgumentType(
         DiscordGuildApplicationCommandPermission.Type.User::class,
         ApplicationCommandType.User::class
     ),
-     Mentionable(
+    Member(
+        dev.kord.core.entity.Member::class,
+        OverwriteType.Member::class,
+    ),
+    Mentionable(
         ApplicationCommandOptionType.Mentionable::class,
         AuditLogChangeKey.Mentionable::class
     ),
@@ -46,11 +50,15 @@ enum class ArgumentType(
     ),
     Number(
         kotlin.Number::class,
-        Double::class
+        Double::class,
+        Float::class
     ),
     Attachment(
         dev.kord.core.entity.Attachment::class,
         ApplicationCommandOptionType.Attachment::class
+    ),
+    Custom(
+
     ),
     None(
         Nothing::class

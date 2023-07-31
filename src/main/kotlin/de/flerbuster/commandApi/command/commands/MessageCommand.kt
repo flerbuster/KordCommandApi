@@ -1,27 +1,29 @@
 package de.flerbuster.commandApi.command.commands
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
-import de.flerbuster.commandApi.command.options.Options
+import de.flerbuster.commandApi.command.options.MessageCommandOptions
 import dev.kord.core.Kord
-import dev.kord.core.entity.interaction.GuildMessageCommandInteraction
-import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
+import dev.kord.core.entity.Message
+import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
 
 class MessageCommand(
-    val name: String,
-    val description: String,
-    private val execution: suspend (interaction: GuildMessageCommandInteraction, options: Options) -> Unit,
-    private val arguments: MutableList<Argument<*>>,
-    private val kord: Kord
+    var prefix: String,
+    override val name: String,
+    private val description: String,
+    val execution: suspend (message: Message, options: MessageCommandOptions) -> Unit,
+    val arguments: MutableList<Argument<*>>,
+    val kord: Kord,
+    private val triggeredByBots: Boolean
 ) : Command<MessageCommand>(name, kord) {
-    // kann das nicht
+    val commandName: String get() = "$prefix$name"
     override suspend fun init() {
-        command = kord.createGlobalMessageCommand(name)
+        println("creating message command $name")
 
-        kord.on<GuildMessageCommandInteractionCreateEvent>(kord) {
-            if (interaction.invokedCommandId == command.id) {
-                execution(interaction, Options(null))
-            }
+        kord.on<MessageCreateEvent>(kord) {
+            if (message.author?.isBot == true && !triggeredByBots) return@on
+            if (!message.content.startsWith(commandName)) return@on
+            execution(message, MessageCommandOptions(message, this@MessageCommand))
         }
     }
 }

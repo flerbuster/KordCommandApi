@@ -1,8 +1,7 @@
 package de.flerbuster.commandApi
 
-import de.flerbuster.commandApi.command.builders.CommandBuilder
-import de.flerbuster.commandApi.command.commands.SlashCommand
 import de.flerbuster.commandApi.command.builders.SlashCommandBuilder
+import de.flerbuster.commandApi.command.commands.SlashCommand
 import dev.kord.core.Kord
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -12,7 +11,7 @@ fun slashCommand(
     description: String,
     kord: Kord,
     register: Boolean = true,
-    builder: CommandBuilder<SlashCommand>.() -> Unit
+    builder: SlashCommandBuilder.() -> Unit
 ): SlashCommand {
     val command = SlashCommandBuilder(name.lowercase(), description.lowercase(), kord).apply(builder).build()
     if (register) command.register()

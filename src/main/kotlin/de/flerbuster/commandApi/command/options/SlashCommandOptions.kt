@@ -6,7 +6,7 @@ import dev.kord.core.entity.interaction.InteractionCommand
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class Options(
+class SlashCommandOptions(
     val command: InteractionCommand?
 ) {
     val strings: Map<String, String> get() = command?.strings ?: mapOf()
@@ -42,16 +42,13 @@ class Options(
         return withTypeT
     }
 
-    @Suppress("UNCHECKED_CAST")
     operator fun <T : Comparable<T>> get(at: String): T? {
-        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at]
-        ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
+        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
     }
 
     @JvmName("get2")
     operator fun get(at: String): Comparable<*>? {
-        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at]
-        ?: roles[at] ?: mentionables[at] ?: attachments[at]
+        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]
     }
 
     fun isEmpty(): Boolean {
@@ -59,7 +56,7 @@ class Options(
     }
 
     override fun toString(): String {
-        return "Options(" +
+        return "SlashCommandOptions(" +
                 "command?=$command?, " +
                 "strings=$strings, " +
                 "integers=$integers, " +
