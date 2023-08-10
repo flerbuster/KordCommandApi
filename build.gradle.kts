@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.flerbuster"
-version = "0.0.1"
+version = "0.1.8.7"
 
 repositories {
     mavenCentral()

@@ -51,7 +51,7 @@ val flerCommand = slashCommand("fler", "fler",  Bot.kord) {
 }
 
 object Bot {
-    val kord = runBlocking { Kord("E1MzNzQyODk5OTg2NDUy.MDc5NQ.J-pLm6Uz2XjDP0T93O8_qE2qBHQ0cvR-4y3NQ9") }
+    val kord = runBlocking { Kord("TOKEN") }
     
     suspend fun run() {
         flerCommand
