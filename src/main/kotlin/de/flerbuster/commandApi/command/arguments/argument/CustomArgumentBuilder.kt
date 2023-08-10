@@ -9,6 +9,7 @@ import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.common.entity.optional.delegate.delegate
 import dev.kord.rest.builder.RequestBuilder
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
+import kotlinx.serialization.StringFormat
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -41,9 +42,13 @@ class CustomArgumentBuilder(
     private var _choices: Optional<MutableList<Choice<String>>> = Optional.Missing()
     var choices: MutableList<Choice<String>>? by ::_choices.delegate()
 
-    inline fun <reified T> choice(name: String, value: T, json: Json = Json) {
+    inline fun <reified T> choice(
+        name: String,
+        value: T,
+        stringFormat: StringFormat = Json
+    ) {
         if (choices == null) choices = mutableListOf()
-        (choices ?: return).add(Choice.StringChoice(name, json.encodeToString(value)))
+        (choices ?: return).add(Choice.StringChoice(name, stringFormat.encodeToString(value)))
     }
 
     fun toBaseChoiceBuilder(): BaseChoiceBuilder<String>.() -> Unit = {
