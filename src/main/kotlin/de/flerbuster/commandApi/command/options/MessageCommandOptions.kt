@@ -1,17 +1,22 @@
 package de.flerbuster.commandApi.command.options
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
+import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
+import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.MessageCommand
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.entity.*
 import dev.kord.core.entity.channel.ResolvedChannel
+import dev.kord.rest.builder.interaction.BaseChoiceBuilder
+import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import io.ktor.util.reflect.*
 import kotlinx.coroutines.runBlocking
 
 class MessageCommandOptions(
     val message: Message,
     val command: MessageCommand,
-) {
+) : BaseOptions() {
     companion object {
         fun String.parseArguments(): List<String> {
             val arguments = mutableListOf<String>()
@@ -159,43 +164,43 @@ class MessageCommandOptions(
         val value: T?
     )
 
-    val strings: Map<String, String> get() = parsedArguments.filter { it.argument.type == ArgumentType.String }.associate {
+    override val strings: Map<String, String> get() = parsedArguments.filter { it.argument.type == ArgumentType.String }.associate {
         it.argument.name to (it.value as String)
     }
 
-    val integers: Map<String, Long> get() = parsedArguments.filter { it.argument.type == ArgumentType.Int }.associate {
+    override val integers: Map<String, Long> get() = parsedArguments.filter { it.argument.type == ArgumentType.Int }.associate {
         it.argument.name to (it.value as Long)
     }
 
-    val numbers: Map<String, Double> get() = parsedArguments.filter { it.argument.type == ArgumentType.Number }.associate {
+    override val numbers: Map<String, Double> get() = parsedArguments.filter { it.argument.type == ArgumentType.Number }.associate {
         it.argument.name to (it.value as Double)
     }
 
-    val booleans: Map<String, Boolean> get() = parsedArguments.filter { it.argument.type == ArgumentType.Boolean }.associate {
+    override val booleans: Map<String, Boolean> get() = parsedArguments.filter { it.argument.type == ArgumentType.Boolean }.associate {
         it.argument.name to (it.value as Boolean)
     }
 
-    val users: Map<String, User> get() = parsedArguments.filter { it.argument.type == ArgumentType.User }.associate {
+    override val users: Map<String, User> get() = parsedArguments.filter { it.argument.type == ArgumentType.User }.associate {
         it.argument.name to (it.value as User)
     }
 
-    val members: Map<String, Member> get() = parsedArguments.filter { it.argument.type == ArgumentType.User }.associate {
+    override val members: Map<String, Member> get() = parsedArguments.filter { it.argument.type == ArgumentType.User }.associate {
         it.argument.name to (it.value as Member)
     }
 
-    val channels: Map<String, ResolvedChannel> get() = parsedArguments.filter { it.argument.type == ArgumentType.Channel }.associate {
+    override val channels: Map<String, ResolvedChannel> get() = parsedArguments.filter { it.argument.type == ArgumentType.Channel }.associate {
         it.argument.name to (it.value as ResolvedChannel)
     }
 
-    val roles: Map<String, Role> get() = parsedArguments.filter { it.argument.type == ArgumentType.Role }.associate {
+    override val roles: Map<String, Role> get() = parsedArguments.filter { it.argument.type == ArgumentType.Role }.associate {
         it.argument.name to (it.value as Role)
     }
 
-    val mentionables: Map<String, Entity> get() = parsedArguments.filter { it.argument.type == ArgumentType.Mentionable }.associate {
+    override val mentionables: Map<String, Entity> get() = parsedArguments.filter { it.argument.type == ArgumentType.Mentionable }.associate {
         it.argument.name to (it.value as Entity)
     }
 
-    val attachments: Map<String, Attachment> get() = parsedArguments.filter { it.argument.type == ArgumentType.Attachment }.associate {
+    override val attachments: Map<String, Attachment> get() = parsedArguments.filter { it.argument.type == ArgumentType.Attachment }.associate {
         it.argument.name to (it.value as Attachment)
     }
 

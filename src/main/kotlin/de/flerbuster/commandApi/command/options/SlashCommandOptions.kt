@@ -9,48 +9,26 @@ import kotlinx.serialization.json.Json
 
 class SlashCommandOptions(
     val command: InteractionCommand?
-) {
-    val strings: Map<String, String> get() = command?.strings ?: mapOf()
+) : BaseOptions() {
+    override val strings: Map<String, String> get() = command?.strings ?: mapOf()
 
-    val integers: Map<String, Long> get() = command?.integers ?: mapOf()
+    override val integers: Map<String, Long> get() = command?.integers ?: mapOf()
 
-    val numbers: Map<String, Double> get() = command?.numbers ?: mapOf()
+    override val numbers: Map<String, Double> get() = command?.numbers ?: mapOf()
 
-    val booleans: Map<String, Boolean> get() = command?.booleans ?: mapOf()
+    override val booleans: Map<String, Boolean> get() = command?.booleans ?: mapOf()
 
-    val users: Map<String, User> get() = command?.users ?: mapOf()
+    override val users: Map<String, User> get() = command?.users ?: mapOf()
 
-    val members: Map<String, Member> get() = command?.members ?: mapOf()
+    override val members: Map<String, Member> get() = command?.members ?: mapOf()
 
-    val channels: Map<String, ResolvedChannel> get() = command?.channels ?: mapOf()
+    override val channels: Map<String, ResolvedChannel> get() = command?.channels ?: mapOf()
 
-    val roles: Map<String, Role> get() = command?.roles ?: mapOf()
+    override val roles: Map<String, Role> get() = command?.roles ?: mapOf()
 
-    val mentionables: Map<String, Entity> get() = command?.mentionables ?: mapOf()
+    override val mentionables: Map<String, Entity> get() = command?.mentionables ?: mapOf()
 
-    val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
-
-    inline fun <reified T> custom(stringFormat: StringFormat = Json): HashMap<String, T> {
-        val withTypeT = hashMapOf<String, T>()
-
-        strings.forEach { (key, value) ->
-            try {
-                withTypeT += key to stringFormat.decodeFromString(value)
-            } catch (_: Exception) {
-            }
-        }
-
-        return withTypeT
-    }
-
-    operator fun <T : Comparable<T>> get(at: String): T? {
-        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
-    }
-
-    @JvmName("get2")
-    operator fun get(at: String): Comparable<*>? {
-        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]
-    }
+    override val attachments: Map<String, Attachment> get() = command?.attachments ?: mapOf()
 
     fun isEmpty(): Boolean {
         return command?.options?.isEmpty() ?: true

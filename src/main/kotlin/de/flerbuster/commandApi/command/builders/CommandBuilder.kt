@@ -5,13 +5,22 @@ import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.Command
+import de.flerbuster.commandApi.command.options.BaseOptions
 import dev.kord.core.Kord
+import dev.kord.core.cache.data.InteractionData
+import dev.kord.core.entity.KordEntity
+import dev.kord.core.entity.Message
+import dev.kord.core.entity.Strategizable
+import dev.kord.core.entity.User
+import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.core.supplier.EntitySupplier
+import dev.kord.core.supplier.EntitySupplyStrategy
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import io.ktor.utils.io.*
 import kotlin.reflect.KClass
 
-sealed class CommandBuilder<T : Command<*>, IC, OC>(
+sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
     open val name: String,
     open val description: String,
     open val kord: Kord
