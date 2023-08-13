@@ -1,7 +1,95 @@
-# KordCommandApi
-## junge als würde das jemand benutzen
+# Kord Command Api
 
-``` kotlin
+## hier gehts zum [Download](https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar)
+
+###
+
+You can create slash commands like this
+```kt
+val exampleCommand = slashCommand("examplecommand", "this is an example command",  kord) {
+
+}
+```
+
+You can now add arguments and what passiert when command gets executed
+```kt
+val exampleCommand = slashCommand("examplecommand", "this is an example command",  kord) {
+    argument<ArgumentType>("argument name", "argument description") {
+        required = true/false
+    }
+    or
+    basicArgument<BasicArgumentType>("argument name", "argument description") {
+        required = true/false
+    }
+
+    runs { interaction, options ->
+        val example = options.ArgumentType(e.g. strings)["argument name"]
+
+        interaction.respondPublic {
+            content = example
+        }
+    }
+}
+```
+
+
+>Argument Types can include String, Int, Number
+>Basic Argument Types include Boolean, User, Membner, Mentionable, Channel, Role, SubCommand, Group, Attachment, you can **not** add choices to these, as they are given by discord
+
+>## options
+>#### `options` is always an instance of an subclass of `BaseOptions`.
+>### Abstract properties
+>- `strings`: Map<String, String>
+>- `integers`: Map<String, Long>
+>- `numbers`: Map<String, Double>
+>- `booleans`: Map<String, Boolean>
+>- `users`: Map<String, User>
+>- `members`: Map<String, Member>
+>- `channels`: Map<String, ResolvedChannel>
+>- `roles`: Map<String, Role>
+>- `mentionables`: Map<String, Entity>
+>- `attachments`: Map<String, Attachment>
+>### Abstract functions
+>- `inline fun <reified T> custom(stringFormat: StringFormat = Json): HashMap<String, T>`
+>- `operator fun <T : Comparable<T>> get(at: String): T?`
+>- `operator fun get(at: String): Comparable<*>?`
+
+You can also add required choices for the user to arguments
+
+```kt
+argument<ArgumentType>("argument name", "argument description") {
+    required = true/false
+
+    choice("choice 1 (seen by user)", "choice1" (what gets passed to options, must be same type as argument))
+}
+```
+
+if you do not want to be stuck with the normal argument types, you can also do custom ones, they need to be Serializable
+```kt
+@Serializable
+data class ExampleCustomClass(
+    stringValue: String,
+    integerValue: Int
+)
+
+....
+customArgument<ExampleCustomClass>("argument name", "argument description") {
+required = true/false
+
+        choice("choice 1 (seen by user)", ExampleCustomClass("value 1", 1))
+        choice("choice 2 (seen by user)", ExampleCustomClass("value 2", 2))
+    }
+```
+you can then get the value the user chose at runtime
+```kt
+runs { interaction, options ->
+        val example = options.custom<ExampleCustomClass>()["argument name"] 
+}
+```
+
+This is a complete example
+
+```kt
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.respondPublic
@@ -52,7 +140,7 @@ val flerCommand = slashCommand("fler", "fler",  Bot.kord) {
 
 object Bot {
     val kord = runBlocking { Kord("TOKEN") }
-    
+
     suspend fun run() {
         flerCommand
 
@@ -64,5 +152,3 @@ suspend fun main() {
     Bot.run()
 }
 ```
-
-das sollte so gehen
