@@ -1,9 +1,12 @@
 package de.flerbuster.commandApi.command.commands
 
+import de.flerbuster.commandApi.cache.CommandCache
 import de.flerbuster.commandApi.command.arguments.argument.Argument
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.options.SlashCommandOptions
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
+import dev.kord.core.entity.Entity
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.event.interaction.*
 import dev.kord.core.on
@@ -26,93 +29,102 @@ class SlashCommand(
     override suspend fun init() {
         println("creating command $name")
 
-        command = kord.createGlobalChatInputCommand(name, description) {
-            arguments.forEach {
-                try {
-                    when (it.type) {
-                        ArgumentType.String -> string(
-                            it.name,
-                            it.description,
-                            it.builder as StringChoiceBuilder.() -> Unit
-                        )
+        val cachedCommand = CommandCache.getCachedCommand(name)
+        if (cachedCommand != null) command = object : Entity {
+            override val id: Snowflake = cachedCommand.commandId
+        }
+        else {
+            command = kord.createGlobalChatInputCommand(name, description) {
+                arguments.forEach {
+                    try {
+                        when (it.type) {
+                            ArgumentType.String -> string(
+                                it.name,
+                                it.description,
+                                it.builder as StringChoiceBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Boolean -> boolean(
-                            it.name,
-                            it.description,
-                            it.builder as BooleanBuilder.() -> Unit
-                        )
+                            ArgumentType.Boolean -> boolean(
+                                it.name,
+                                it.description,
+                                it.builder as BooleanBuilder.() -> Unit
+                            )
 
-                        ArgumentType.User -> user(
-                            it.name,
-                            it.description,
-                            it.builder as UserBuilder.() -> Unit
-                        )
+                            ArgumentType.User -> user(
+                                it.name,
+                                it.description,
+                                it.builder as UserBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Member -> user(
-                            it.name,
-                            it.description,
-                            it.builder as UserBuilder.() -> Unit
-                        )
+                            ArgumentType.Member -> user(
+                                it.name,
+                                it.description,
+                                it.builder as UserBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Mentionable -> mentionable(
-                            it.name,
-                            it.description,
-                            it.builder as MentionableBuilder.() -> Unit
-                        )
+                            ArgumentType.Mentionable -> mentionable(
+                                it.name,
+                                it.description,
+                                it.builder as MentionableBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Channel -> channel(
-                            it.name,
-                            it.description,
-                            it.builder as ChannelBuilder.() -> Unit
-                        )
+                            ArgumentType.Channel -> channel(
+                                it.name,
+                                it.description,
+                                it.builder as ChannelBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Role -> role(
-                            it.name,
-                            it.description,
-                            it.builder as RoleBuilder.() -> Unit
-                        )
+                            ArgumentType.Role -> role(
+                                it.name,
+                                it.description,
+                                it.builder as RoleBuilder.() -> Unit
+                            )
 
-                        ArgumentType.SubCommand -> subCommand(
-                            it.name,
-                            it.description,
-                            it.builder as SubCommandBuilder.() -> Unit
-                        )
+                            ArgumentType.SubCommand -> subCommand(
+                                it.name,
+                                it.description,
+                                it.builder as SubCommandBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Group -> group(
-                            it.name,
-                            it.description,
-                            it.builder as GroupCommandBuilder.() -> Unit
-                        )
+                            ArgumentType.Group -> group(
+                                it.name,
+                                it.description,
+                                it.builder as GroupCommandBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Int -> int(
-                            it.name,
-                            it.description,
-                            it.builder as IntChoiceBuilder.() -> Unit
-                        )
+                            ArgumentType.Int -> int(
+                                it.name,
+                                it.description,
+                                it.builder as IntChoiceBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Number -> number(
-                            it.name,
-                            it.description,
-                            it.builder as NumberChoiceBuilder.() -> Unit
-                        )
+                            ArgumentType.Number -> number(
+                                it.name,
+                                it.description,
+                                it.builder as NumberChoiceBuilder.() -> Unit
+                            )
 
-                        ArgumentType.Attachment -> attachment(
-                            it.name,
-                            it.description,
-                            it.builder as AttachmentBuilder.() -> Unit
-                        )
+                            ArgumentType.Attachment -> attachment(
+                                it.name,
+                                it.description,
+                                it.builder as AttachmentBuilder.() -> Unit
+                            )
 
-                        ArgumentType.None -> {}
+                            ArgumentType.None -> {}
+                        }
+                    } catch (e: Exception) {
+                        println(
+                            "got an unexpected error during the creation of the '${it.name}' argument (${name} command), " +
+                                    "this could be because the builder for ${it.type} is no 'BaseChoiceBuilder' " +
+                                    "try calling the 'basicArgument' function instead of the 'argument' function"
+                        )
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    println("got an unexpected error during the creation of the '${it.name}' argument (${name} command), " +
-                            "this could be because the builder for ${it.type} is no 'BaseChoiceBuilder' " +
-                            "try calling the 'basicArgument' function instead of the 'argument' function"
-                    )
-                    e.printStackTrace()
                 }
             }
+            CommandCache.cacheCommand(this)
         }
+
 
         kord.on<ChatInputCommandInteractionCreateEvent>(kord) {
             try {

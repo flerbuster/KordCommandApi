@@ -2,7 +2,19 @@
 
 ## hier gehts zum [Download](https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar)
 
-###
+####
+
+> ## Installation Guide
+> 1. Download The [Kord Command Api Jar](https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar)
+> 2. Create a Gradle project
+> 3. Add the [Kordlib](https://github.com/kordlib/kord) Dependency (Maven Central)
+>
+>      dependencies { implementation("dev.kord:kord-core:0.8.0-M12") }
+> 4. place the [Kord Command Api Jar](https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar) in the project files /libs/
+> 5. add the file dependency 
+> 
+>      dependencies { implementation(files("./libs/KordCommandApi-0.1.8.7.jar)) }
+> 6. enjoy
 
 You can create slash commands like this
 ```kt
@@ -38,21 +50,22 @@ val exampleCommand = slashCommand("examplecommand", "this is an example command"
 
 >## options
 >#### `options` is always an instance of an subclass of `BaseOptions`.
->### Abstract properties
->- `strings`: Map<String, String>
->- `integers`: Map<String, Long>
->- `numbers`: Map<String, Double>
->- `booleans`: Map<String, Boolean>
->- `users`: Map<String, User>
->- `members`: Map<String, Member>
->- `channels`: Map<String, ResolvedChannel>
->- `roles`: Map<String, Role>
->- `mentionables`: Map<String, Entity>
->- `attachments`: Map<String, Attachment>
->### Abstract functions
->- `inline fun <reified T> custom(stringFormat: StringFormat = Json): HashMap<String, T>`
->- `operator fun <T : Comparable<T>> get(at: String): T?`
->- `operator fun get(at: String): Comparable<*>?`
+>>### Abstract properties
+>>- `strings`: Map<String, String>
+>>- `integers`: Map<String, Long>
+>>- `numbers`: Map<String, Double>
+>>- `booleans`: Map<String, Boolean>
+>>- `users`: Map<String, User>
+>>- `members`: Map<String, Member>
+>>- `channels`: Map<String, ResolvedChannel>
+>>- `roles`: Map<String, Role>
+>>- `mentionables`: Map<String, Entity>
+>>- `attachments`: Map<String, Attachment>
+>
+>>### Abstract functions
+>>- `inline fun <reified T> custom(stringFormat: StringFormat = Json): HashMap<String, T>`
+>>- `operator fun <T : Comparable<T>> get(at: String): T?`
+>>- `operator fun get(at: String): Comparable<*>?`
 
 You can also add required choices for the user to arguments
 
@@ -73,8 +86,8 @@ data class ExampleCustomClass(
 )
 
 ....
-customArgument<ExampleCustomClass>("argument name", "argument description") {
-required = true/false
+    customArgument<ExampleCustomClass>("argument name", "argument description") {
+        required = true/false
 
         choice("choice 1 (seen by user)", ExampleCustomClass("value 1", 1))
         choice("choice 2 (seen by user)", ExampleCustomClass("value 2", 2))
@@ -83,7 +96,7 @@ required = true/false
 you can then get the value the user chose at runtime
 ```kt
 runs { interaction, options ->
-        val example = options.custom<ExampleCustomClass>()["argument name"] 
+    val example = options.custom<ExampleCustomClass>()["argument name"] 
 }
 ```
 
