@@ -16,7 +16,6 @@ enum class ArgumentType(
     User(
         dev.kord.core.entity.User::class,
         ApplicationCommandOptionType.User::class,
-        DiscordGuildApplicationCommandPermission.Type.User::class,
         ApplicationCommandType.User::class
     ),
     Member(
@@ -35,7 +34,6 @@ enum class ArgumentType(
         dev.kord.core.entity.Role::class,
         ApplicationCommandOptionType.Role::class,
         OverwriteType.Role::class,
-        DiscordGuildApplicationCommandPermission.Type.Role::class,
     ),
     SubCommand(
         dev.kord.common.entity.SubCommand::class,
@@ -47,6 +45,7 @@ enum class ArgumentType(
     ),
     Int(
         kotlin.Int::class,
+        Long::class,
     ),
     Number(
         kotlin.Number::class,

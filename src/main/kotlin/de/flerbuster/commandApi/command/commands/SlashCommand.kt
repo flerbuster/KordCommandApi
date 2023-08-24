@@ -15,23 +15,26 @@ import kotlin.reflect.KClass
 
 class SlashCommand(
     override val name: String,
-    val description: String,
-    private val arguments: MutableList<Argument<*>>,
+    override val description: String,
+    override val arguments: MutableList<Argument<*>>,
     private val execution: suspend (interaction: ChatInputCommandInteraction, options: SlashCommandOptions) -> Unit,
     private val exceptionHandling: HashMap<KClass<Exception>, suspend (
         exception: Exception,
         interaction: ChatInputCommandInteraction,
         command: SlashCommand
     ) -> Unit>,
-    private val kord: Kord
-) : Command<SlashCommand>(name, kord) {
+    val kord: Kord,
+    private val recache: Boolean
+) : Command<SlashCommand>(name, description, arguments, kord) {
+    override val commandName: String get() = "/$name"
+
     @Suppress("UNCHECKED_CAST")
     override suspend fun init() {
         println("creating command $name")
 
-        val cachedCommand = CommandCache.getCachedCommand(name)
-        if (cachedCommand != null) command = object : Entity {
-            override val id: Snowflake = cachedCommand.commandId
+        val cachedCommand = CommandCache.getCachedCommand(this, kord)
+        if (cachedCommand != null && CommandCache.enabled && !recache) command = object : Entity {
+            override val id: Snowflake = cachedCommand.id
         }
         else {
             command = kord.createGlobalChatInputCommand(name, description) {
@@ -92,16 +95,16 @@ class SlashCommand(
                                 it.builder as GroupCommandBuilder.() -> Unit
                             )
 
-                            ArgumentType.Int -> int(
+                            ArgumentType.Int -> integer(
                                 it.name,
                                 it.description,
-                                it.builder as IntChoiceBuilder.() -> Unit
+                                it.builder as IntegerOptionBuilder.() -> Unit
                             )
 
                             ArgumentType.Number -> number(
                                 it.name,
                                 it.description,
-                                it.builder as NumberChoiceBuilder.() -> Unit
+                                it.builder as NumberOptionBuilder.() -> Unit
                             )
 
                             ArgumentType.Attachment -> attachment(
@@ -110,7 +113,7 @@ class SlashCommand(
                                 it.builder as AttachmentBuilder.() -> Unit
                             )
 
-                            ArgumentType.None -> {}
+                            else -> { }
                         }
                     } catch (e: Exception) {
                         println(
@@ -122,7 +125,7 @@ class SlashCommand(
                     }
                 }
             }
-            CommandCache.cacheCommand(this)
+            if (CommandCache.enabled) CommandCache.cacheCommand(this)
         }
 
 

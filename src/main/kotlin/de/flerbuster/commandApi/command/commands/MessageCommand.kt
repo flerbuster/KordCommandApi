@@ -10,13 +10,13 @@ import dev.kord.core.on
 class MessageCommand(
     var prefix: String,
     override val name: String,
-    private val description: String,
+    override val description: String,
     val execution: suspend (message: Message, options: MessageCommandOptions) -> Unit,
-    val arguments: MutableList<Argument<*>>,
+    override val arguments: MutableList<Argument<*>>,
     val kord: Kord,
     private val triggeredByBots: Boolean
-) : Command<MessageCommand>(name, kord) {
-    val commandName: String get() = "$prefix$name"
+) : Command<MessageCommand>(name, description, arguments, kord) {
+    override val commandName: String get() = "$prefix$name"
     override suspend fun init() {
         println("creating message command $name")
 

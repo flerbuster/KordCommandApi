@@ -11,9 +11,10 @@ fun slashCommand(
     description: String,
     kord: Kord,
     register: Boolean = true,
+    recache: Boolean = false,
     builder: SlashCommandBuilder.() -> Unit
 ): SlashCommand {
-    val command = SlashCommandBuilder(name.lowercase(), description.lowercase(), kord).apply(builder).build()
+    val command = SlashCommandBuilder(name.lowercase(), description.lowercase(), kord, recache).apply(builder).build()
     if (register) command.register()
     return command
 }

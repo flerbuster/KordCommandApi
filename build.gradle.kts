@@ -1,12 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.4.20"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
 
     java
 }
 
 group = "de.flerbuster"
-version = "0.1.8.7"
+version = "1.8.7"
 
 repositories {
     mavenCentral()
@@ -14,5 +14,5 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("dev.kord:kord-core:0.8.0-M12")
+    implementation("dev.kord:kord-core:0.10.0")
 }

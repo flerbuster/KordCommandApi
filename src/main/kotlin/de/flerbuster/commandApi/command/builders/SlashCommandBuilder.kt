@@ -8,7 +8,8 @@ import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 class SlashCommandBuilder(
     override val name: String,
     override val description: String,
-    override val kord: Kord
+    override val kord: Kord,
+    private val recache: Boolean = false
 ) : CommandBuilder<SlashCommand, ChatInputCommandInteraction, SlashCommandOptions>(name, description, kord) {
-    override fun build() = SlashCommand(name, description, arguments, execution, exceptionHandlers, kord)
+    override fun build() = SlashCommand(name, description, arguments, execution, exceptionHandlers, kord, recache)
 }
