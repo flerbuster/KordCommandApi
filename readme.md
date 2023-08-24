@@ -9,11 +9,11 @@
 > 2. Create a Gradle project
 > 3. Add the [Kordlib](https://github.com/kordlib/kord) Dependency (Maven Central)
 >
->      ```dependencies { implementation("dev.kord:kord-core:0.8.0-M12") }```
+>      ```dependencies { implementation("dev.kord:kord-core:0.10.0") }```
 > 4. place the [Kord Command Api Jar](https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar) in the project files /libs/
 > 5. add the file dependency 
 > 
->      ```dependencies { implementation(files("./libs/KordCommandApi-0.1.8.7.jar)) }```
+>      ```dependencies { implementation(files("./libs/KordCommandApi-0.10.0.jar)) }```
 > 6. enjoy
 
 You can create slash commands like this
