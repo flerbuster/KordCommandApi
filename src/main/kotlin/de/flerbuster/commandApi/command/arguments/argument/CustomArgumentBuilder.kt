@@ -54,8 +54,8 @@ class CustomArgumentBuilder(
     /**
      * from [dev.kord.rest.builder.interaction.BaseChoiceBuilder]
      */
-    internal var _choices: Optional<MutableList<Choice<*>>> = Optional.Missing()
-    public var choices: MutableList<Choice<*>>? by ::_choices.delegate()
+    internal var _choices: Optional<MutableList<Choice.StringChoice>> = Optional.Missing()
+    public var choices: MutableList<Choice.StringChoice>? by ::_choices.delegate()
 
 
     /**
@@ -84,6 +84,15 @@ class CustomArgumentBuilder(
     ) {
         if (choices == null) choices = mutableListOf()
         (choices ?: return).add(Choice.StringChoice(name, Optional(nameLocalizations), stringFormat.encodeToString(value)))
+    }
+
+    fun toBaseChoiceBuilder(): BaseChoiceBuilder<String>.() -> Unit = {
+        default = this@CustomArgumentBuilder.default
+        required = this@CustomArgumentBuilder.required
+        autocomplete = this@CustomArgumentBuilder.autocomplete
+        this@CustomArgumentBuilder.choices?.forEach {
+            choice(it.name, it.value, it.nameLocalizations)
+        }
     }
 
     override fun toRequest(): ApplicationCommandOption = ApplicationCommandOption(
