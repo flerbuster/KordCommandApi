@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>KordCommandApi</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+
+  <meta http-equiv='cache-control' content='no-cache'> 
+  <meta http-equiv='expires' content='0'> 
+  <meta http-equiv='pragma' content='no-cache'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-twilight.min.css" />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" /> heller -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-twilight.min.css" /> dunkler -->
+  <style>
+    /* Override border properties for code blocks */
+    pre[class*="language-"] {
+        border: none !important;
+        padding: 13px !important;
+        margin: 0 !important;
+    }
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-kotlin.min.js"></script>
+
+</head>
+<body>
+    
+    
+    <div style="text-align: center; padding-bottom: 15px; padding-top: 10px;">
+        <a class="noblue" href="https://github.com/flerbuster" target="_blank">
+            <h1 style="display: inline; font-size: 125%; margin: 0;">Flerbuster/</h1>
+        </a>
+        <a class="noblue" href="https://github.com/flerbuster/KordCommandApi" target="_blank">
+            <h1 style="display: inline; font-size: 300%; margin: 0;">KordCommandApi</h1>
+        </a>
+    </div>
+    
+    
+    
+      <div class="info">
+    <p>Die KordCommandApi ist eine leistungsstarke API für die Verwaltung von Befehlen in Kord.</p>
+    <p>Um die API zu nutzen, musst du zuerst die KordCommandApi-Bibliothek in dein Projekt einbinden.</p>
+    <p>Dann kannst du Befehle erstellen, bearbeiten und ausführen, um deine Discord-Bot-Funktionalität zu erweitern.</p>
+    <p>Weniger Informationen findest du in der offiziellen Dokumentation der <a target="_blank" href="https://github.com/flerbuster/KordCommandApi">KordCommandApi</a>.</p>
+  </div>
+  <div class="info">
+    <p>hier gehts zum <a href="https://github.com/flerbuster/KordCommandApi/releases/download/fler/KordCommandApi-0.1.8.7.jar">Download</a></p>
+  </div>
+
+  <p>You can create slash commands like this</p>
+  <div class="pre-container"><pre><code class="language-kotlin">val exampleCommand = slashCommand("examplecommand", "this is an example command",  kord) {
+    
+}<button class="copy-button"/></code>
+
+</pre></div>
+     <p>You can now add arguments and what passiert when command gets executed</p>
+     <div class="pre-container"><pre><code class="language-kotlin">val exampleCommand = slashCommand("examplecommand", "this is an example command",  kord) {
+    argument&lt;ArgumentType&gt;("argument name", "argument description") {
+        required = true/false
+    }
+    or
+    basicArgument&lt;BasicArgumentType&gt;("argument name", "argument description") {
+        required = true/false
+    }
+
+    runs { interaction, options ->
+        val example = options.ArgumentType(e.g. strings)["argument name"]
+
+        interaction.respondPublic {
+            content = example
+        }
+    }
+}<button class="copy-button"/></code></pre></div>
+
+<div class="info">
+    <p>Argument Types can include String, Int, Number</p>
+    <p>Basic Argument Types include Boolean, User, Membner, Mentionable, Channel, Role, SubCommand, Group, Attachment, you can <strong>not</strong> add choices to these, as they are given by discord</p>
+</div>
+<div class="info">
+    <p><i><u>options</u></i> is always an instance of an subclass of <u>BaseOptions</u></p>
+    <p><strong>Abstract properties</strong></p>
+    <p> - strings: Map&lt;String, String&gt; </p>
+    <p> - integers: Map&lt;String, Long&gt;</p>
+    <p> - numbers: Map&lt;String, Double&gt;</p>
+    <p> - booleans: Map&lt;String, Boolean&gt;</p>
+    <p> - users: Map&lt;String, User&gt;</p>
+    <p> - members: Map&lt;String, Member&gt;</p>
+    <p> - channels: Map&lt;String, ResolvedChannel&gt;</p>
+    <p> - roles: Map&lt;String, Role&gt;</p>
+    <p> - mentionables: Map&lt;String, Entity&gt;</p>
+    <p> - attachments: Map&lt;String, Attachment&gt;</p>
+    <p><strong>Abstract functions</strong></p>
+    <p> - inline fun &lt;reified T&gt; custom(stringFormat: StringFormat = Json): HashMap&lt;String, T&gt;</p>
+    <p> - operator fun &lt;T : Comparable&lt;T&gt;&gt; get(at: String): T? </p>
+    <p> - operator fun get(at: String): Comparable&lt;*&gt;? </p>
+</div>
+
+<p>You can also add required choices for the user to arguments</p>
+<div class="pre-container"><pre><code class="language-kotlin">argument&lt;ArgumentType&gt;("argument name", "argument description") {
+    required = true/false
+
+    choice("choice 1 (seen by user)", "choice1" (what gets passed to options, must be same type as argument))
+}<button class="copy-button"/></code></pre></div>
+
+<p>if you do not want to be stuck with the normal argument types, you can also do custom ones, they need to be Serializable</p>
+<div class="pre-container"><pre>
+<code class="language-kotlin">@Serializable
+data class ExampleCustomClass(
+    stringValue: String,
+    integerValue: Int
+)
+    
+....
+    customArgument&lt;ExampleCustomClass&gt;("argument name", "argument description") {
+        required = true/false
+
+        choice("choice 1 (seen by user)", ExampleCustomClass("value 1", 1))
+        choice("choice 2 (seen by user)", ExampleCustomClass("value 2", 2))
+    }<button class="copy-button"/></code></pre></div>
+<p>you can then get the value the user chose at runtime</p>
+<div class="pre-container"><pre><code class="language-kotlin">    runs { interaction, options ->
+        val example = options.custom&lt;ExampleCustomClass&gt;()["argument name"]
+    }</code><button class="copy-button"/></pre></div></div>
+<p>This is an complete example</p>
+<div class="pre-container"><pre><code class="language-kotlin">import dev.kord.core.Kord
+import dev.kord.core.behavior.interaction.respondEphemeral
+import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.core.entity.User
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlin.random.Random
+
+@Serializable
+data class Fler(val type: Int, val fler: String)
+
+class ExceptionThatMightHappen : Exception("fler")
+
+val flerCommand = slashCommand("fler", "fler",  Bot.kord) {
+    val json = Json {
+        ignoreUnknownKeys = true
+        prettyPrint = true
+        prettyPrintIndent = " ".repeat(187)
+    }
+
+    basicArgument&lt;User&gt;("user", "user who gets flered") {
+        required = true
+    }
+
+    customArgument("fler", "type of fler") {
+        choice("fler1", Fler(1, "das ist hier ist fler 1"), json)
+        choice("fler2", Fler(2, "das ist hier ist fler 2"), json)
+        choice("fler3", Fler(3, "das ist hier ist fler 3"), json)
+
+        required = true
+    }
+
+    runs { interaction, options ->
+        val user = options.users["user"]!!
+        val fler = options.custom&lt;Fler&gt;(json)["fler"]!!
+        if (Random.nextBoolean()) throw ExceptionThatMightHappen()
+
+        interaction.respondPublic {
+            content = "hm ${user.mention} wurde mit $fler geflert"
+        }
+    }
+
+    catches&lt;ExceptionThatMightHappen&gt; { exception, interaction, command ->
+        interaction.respondEphemeral { content = "hm jop exception passiert" }
+    }
+}
+
+object Bot {
+    val kord = runBlocking { Kord("TOKEN") }
+    
+    suspend fun run() {
+        flerCommand
+
+        kord.login()
+    }
+}
+
+suspend fun main() {
+    Bot.run()
+}</code><button class="copy-button"/></button></pre></div>
+  <script src="script.js" type="module"></script>
+  <script>
+    // Apply syntax highlighting to all code blocks
+    Prism.highlightAll();
+</script>
+</body>
+</html>

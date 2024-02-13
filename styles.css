@@ -1,0 +1,184 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #222;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #fff;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
+h1:hover {
+  cursor: pointer;
+}
+
+a.noblue {
+  color: inherit; /* This will make the color the same as its parent element */
+  text-decoration: none; /* This will remove underlines or other text decorations */
+}
+
+
+
+.info {
+  margin: 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  position: relative;
+}
+
+p {
+    margin-left: 10px;
+    padding: 0;
+    padding-top: 15px;
+  }
+
+.info p {
+  margin: 5px;
+  padding: 0;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.pre-container {
+  margin: 10px;
+}
+
+/*
+pre {
+  position: relative;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  font-family: monospace;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+}
+*/
+
+
+  .info::before {
+    content: "";
+    position: absolute;
+    width: 27.5px;
+    height: 27.5px;
+    top: 1px;
+    right: 1px; /* Position at the top right corner */
+    border: none;
+    padding: 1px 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-image: url('info.png'); /* Replace with the correct path */
+    background-size: 17.5px; /* Adjust the size of the icon */
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .copy-button {
+    display: none;
+    z-index: 4;
+    position: absolute;
+    width: 27.5px;
+    height: 27.5px;
+    top: 5px;
+    right: 5px;
+    background-color: #00000050;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-image: url('copy-content.svg'); /* Replace with the correct path */
+    background-size: 12.5px;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: visible;
+
+    /* Add pseudo-elements for the tooltip */
+}
+
+.copy-button::before {
+    content: 'Click to Copy';
+    position: relative;
+    top: -1.5px;
+    left: -100px;
+    transform: translateX(-50%);
+    background-color: #00000043;
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    overflow:visible ;
+    z-index: 100; /* Ensure tooltip appears above the button */
+    border-radius: 5px;
+    overflow-y:hidden;
+
+}
+
+pre, code {
+  overflow-x:hidden;
+
+}
+
+.copy-button::after {
+  width: 10px;
+  display: none;
+}
+    
+.copy-button:hover::before {
+    opacity: 1;
+}
+
+
+
+/* Hide scrollbar buttons */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #333; /* Darker grey color */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #777; /* Even darker grey color */
+  border-radius: 5px; /* Rounded corners for the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888; /* Lighter grey color when hovering */
+}
+
+/* Make the scrollbar slimmer */
+::-webkit-scrollbar {
+  width: 10px; /* Adjust this value to make it slimmer or wider */
+}
+
+/* Make the scrollbar track area slimmer */
+::-webkit-scrollbar-track-piece {
+  background-color: transparent; /* Make the track area transparent */
+}
+
+.element-with-scrollbar {
+  display: none;
+}
