@@ -1,17 +1,12 @@
 package de.flerbuster.commandApi.command.options
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
-import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
-import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.MessageCommand
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.entity.*
 import dev.kord.core.entity.channel.ResolvedChannel
-import dev.kord.rest.builder.interaction.BaseChoiceBuilder
-import dev.kord.rest.builder.interaction.StringChoiceBuilder
-import io.ktor.util.reflect.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 /**
  * respective [BaseOptions] for [MessageCommand]s
@@ -19,7 +14,16 @@ import kotlinx.coroutines.runBlocking
 class MessageCommandOptions(
     val message: Message,
     val command: MessageCommand,
+    val finishCallback: suspend (MessageCommandOptions) -> Unit
 ) : BaseOptions() {
+
+    init {
+        command.kord.launch {
+            parsedArguments = parseArgumentsByName()
+            finishCallback(this@MessageCommandOptions)
+        }
+    }
+
     companion object {
         fun String.parseArguments(): List<String> {
             val arguments = mutableListOf<String>()
@@ -53,7 +57,7 @@ class MessageCommandOptions(
 
     private val commandArguments = message.content.replace(command.commandName, "").parseArguments()
 
-    private val parsedArguments: List<ParsedArgument<*>> = runBlocking { parseArgumentsByName() }
+    private var parsedArguments: List<ParsedArgument<*>> = listOf()
 
     private fun String.extractId(afterAngleBracket: String ): Long? {
         val regexPattern = """<$afterAngleBracket(\d+)>""".toRegex()
@@ -172,7 +176,7 @@ class MessageCommandOptions(
     }
 
     override val integers: Map<String, Long> get() = parsedArguments.filter { it.argument.type == ArgumentType.Int }.associate {
-        it.argument.name to (it.value as Long)
+        it.argument.name to (it.value as Int).toLong()
     }
 
     override val numbers: Map<String, Double> get() = parsedArguments.filter { it.argument.type == ArgumentType.Number }.associate {
@@ -187,7 +191,7 @@ class MessageCommandOptions(
         it.argument.name to (it.value as User)
     }
 
-    override val members: Map<String, Member> get() = parsedArguments.filter { it.argument.type == ArgumentType.User }.associate {
+    override val members: Map<String, Member> get() = parsedArguments.filter { it.argument.type == ArgumentType.Member }.associate {
         it.argument.name to (it.value as Member)
     }
 

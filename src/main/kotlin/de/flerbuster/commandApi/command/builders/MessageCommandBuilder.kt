@@ -16,5 +16,5 @@ class MessageCommandBuilder(
 ) : CommandBuilder<MessageCommand,  Message, MessageCommandOptions>(name, description, kord) {
     var triggeredByBots = false
 
-    override fun build() = MessageCommand(prefix, name, description, execution, arguments, kord, triggeredByBots)
+    override fun build() = MessageCommand(prefix, name, description, execution, arguments, exceptionHandlers, kord, triggeredByBots)
 }

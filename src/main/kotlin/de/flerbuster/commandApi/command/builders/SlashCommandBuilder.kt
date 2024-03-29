@@ -19,5 +19,15 @@ class SlashCommandBuilder(
      *
      * @return [SlashCommand]
      */
-    override fun build() = SlashCommand(name, description, arguments, execution, exceptionHandlers, kord, recache)
+    override fun build() = SlashCommand(
+        name,
+        description,
+        arguments,
+        execution,
+        exceptionHandlers,
+        nameLocalizations,
+        descriptionLocalizations,
+        kord,
+        recache
+    )
 }

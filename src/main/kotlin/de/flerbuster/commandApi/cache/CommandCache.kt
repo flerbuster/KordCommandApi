@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 object CommandCache {
     val Kord.token get() = this.resources.token
+
     @Serializable
     internal data class CachedArgument(
         val name: String,
@@ -45,7 +46,7 @@ object CommandCache {
                 return CachedCommand(
                     command.name,
                     command.description,
-                    command.arguments.map { CachedArgument.fromArgument(it) },
+                    command.arguments.map(CachedArgument::fromArgument),
                     command.command.id
                 )
             }
@@ -92,7 +93,7 @@ object CommandCache {
         }
     }
 
-    internal fun getCachedCommand(command: SlashCommand, kord: Kord): CachedCommand? {
+    internal fun getCachedCommand(command: SlashCommand, kord: Kord = command.kord): CachedCommand? {
         return cache[kord.token]?.find { cachedCmd ->
             cachedCmd.name == command.name &&
                     cachedCmd.arguments == command.arguments.map { CachedArgument.fromArgument(it) } &&

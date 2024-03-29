@@ -3,7 +3,10 @@ package de.flerbuster.commandApi.command.commands
 import de.flerbuster.commandApi.cache.CommandCache
 import de.flerbuster.commandApi.command.arguments.argument.Argument
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
+import de.flerbuster.commandApi.command.events.SlashCommandAddEvent
 import de.flerbuster.commandApi.command.options.SlashCommandOptions
+import dev.kord.common.Locale
+import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.entity.Entity
@@ -23,6 +26,8 @@ class SlashCommand(
         interaction: ChatInputCommandInteraction,
         command: SlashCommand
     ) -> Unit>,
+    private val nameLocalizations: MutableMap<Locale, String>?,
+    private val descriptionLocalizations: MutableMap<Locale, String>?,
     val kord: Kord,
     private val recache: Boolean
 ) : Command<SlashCommand>(name, description, arguments, kord) {
@@ -31,16 +36,19 @@ class SlashCommand(
     /**
      * initializes the command, listening for interactions being made with the command id
      */
+    @OptIn(KordPreview::class)
     @Suppress("UNCHECKED_CAST")
     override suspend fun init() {
-        println("creating command $name")
+        val cachedCommand = CommandCache.getCachedCommand(this)
 
-        val cachedCommand = CommandCache.getCachedCommand(this, kord)
         if (cachedCommand != null && CommandCache.enabled && !recache) command = object : Entity {
             override val id: Snowflake = cachedCommand.id
         }
         else {
             command = kord.createGlobalChatInputCommand(name, description) {
+                nameLocalizations = this@SlashCommand.nameLocalizations
+                descriptionLocalizations = this@SlashCommand.descriptionLocalizations
+
                 arguments.forEach {
                     try {
                         when (it.type) {
@@ -131,7 +139,6 @@ class SlashCommand(
             if (CommandCache.enabled) CommandCache.cacheCommand(this)
         }
 
-
         kord.on<ChatInputCommandInteractionCreateEvent>(kord) {
             try {
                 if (interaction.command.rootId == command.id) {
@@ -149,5 +156,7 @@ class SlashCommand(
                 }
             }
         }
+
+        emitEvent(SlashCommandAddEvent(this))
     }
 }

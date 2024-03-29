@@ -5,8 +5,11 @@ import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.Command
+import de.flerbuster.commandApi.command.commands.SlashCommand
+import de.flerbuster.commandApi.command.commands.MessageCommand
 import de.flerbuster.commandApi.command.options.BaseOptions
 import de.flerbuster.commandApi.errors.TypeNotSupportedError
+import dev.kord.common.Locale
 import dev.kord.core.Kord
 import dev.kord.core.entity.KordEntity
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
@@ -15,7 +18,7 @@ import io.ktor.utils.io.*
 import kotlin.reflect.KClass
 
 /**
- * Base Builder class for [de.flerbuster.commandApi.command.commands.SlashCommand] and [de.flerbuster.commandApi.command.commands.MessageCommand]
+ * Base Builder class for [SlashCommand] and [MessageCommand]
  */
 sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
     open val name: String,
@@ -31,6 +34,16 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
      * if all arguments created are required by default.
      */
     var defaultRequired = false
+
+    /**
+     * name localizations
+     */
+    var nameLocalizations: MutableMap<Locale, String>? = null
+
+    /**
+     * description localizations
+     */
+    var descriptionLocalizations: MutableMap<Locale, String>? = null
 
     internal var execution: suspend (interaction: IC, options: OC) -> Unit =
         { _, _ -> }
@@ -125,6 +138,33 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
             }
         arguments += argument
         return argument
+    }
+
+    fun nameLocalizations(_nameLocalizations: MutableMap<Locale, String>) {
+        nameLocalizations = _nameLocalizations
+    }
+
+    fun nameLocalizations(vararg _nameLocalizations: Pair<Locale, String>) {
+        nameLocalizations = mutableMapOf(*_nameLocalizations)
+    }
+
+    fun name(locale: Locale, name: String) {
+        if (nameLocalizations == null) nameLocalizations = mutableMapOf()
+        nameLocalizations!![locale] = name
+    }
+
+
+    fun descriptionLocalizations(_descriptionLocalizations: MutableMap<Locale, String>) {
+        descriptionLocalizations = _descriptionLocalizations
+    }
+
+    fun descriptionLocalizations(vararg _descriptionLocalizations: Pair<Locale, String>) {
+        descriptionLocalizations = mutableMapOf(*_descriptionLocalizations)
+    }
+
+    fun description(locale: Locale, name: String) {
+        if (descriptionLocalizations == null) descriptionLocalizations = mutableMapOf()
+        descriptionLocalizations!![locale] = name
     }
 
     internal abstract fun build(): T

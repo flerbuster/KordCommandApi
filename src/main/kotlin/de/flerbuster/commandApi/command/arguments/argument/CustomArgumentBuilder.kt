@@ -11,6 +11,7 @@ import dev.kord.common.entity.optional.OptionalInt
 import dev.kord.common.entity.optional.delegate.delegate
 import dev.kord.rest.builder.RequestBuilder
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
+import dev.kord.rest.builder.interaction.ChoiceLocalizationsBuilder
 import dev.kord.rest.builder.interaction.LocalizedDescriptionBuilder
 import dev.kord.rest.builder.interaction.LocalizedNameBuilder
 import kotlinx.serialization.StringFormat
@@ -29,7 +30,7 @@ class CustomArgumentBuilder(
 ) : RequestBuilder<ApplicationCommandOption>, LocalizedNameBuilder, LocalizedDescriptionBuilder {
     /**
     *  from [dev.kord.rest.builder.interaction.OptionsBuilder]
-     **/
+     */
     internal var _default: OptionalBoolean = OptionalBoolean.Missing
     public var default: Boolean? by ::_default.delegate()
     internal var _nameLocalizations: Optional<MutableMap<Locale, String>?> = Optional.Missing()
@@ -87,11 +88,12 @@ class CustomArgumentBuilder(
     inline fun <reified T> choice(
         name: String,
         value: T,
-        nameLocalizations: Map<Locale, String>? = null,
-        stringFormat: StringFormat = Json
+        stringFormat: StringFormat = Json,
+        localizationsBuilder: ChoiceLocalizationsBuilder.() -> Unit = { }
     ) {
+        val builder = ChoiceLocalizationsBuilder(name).apply(localizationsBuilder)
         if (choices == null) choices = mutableListOf()
-        (choices ?: return).add(Choice.StringChoice(name, Optional(nameLocalizations), stringFormat.encodeToString(value)))
+        (choices ?: return).add(Choice.StringChoice(builder.name, Optional(builder.nameLocalizations), stringFormat.encodeToString(value)))
     }
 
     /**
