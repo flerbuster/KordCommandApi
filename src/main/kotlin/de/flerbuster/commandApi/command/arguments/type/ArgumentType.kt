@@ -17,31 +17,23 @@ enum class ArgumentType(
         kotlin.Boolean::class
     ),
     User(
-        dev.kord.core.entity.User::class,
-        ApplicationCommandOptionType.User::class,
-        ApplicationCommandType.User::class
+        dev.kord.core.entity.User::class
     ),
     Member(
-        dev.kord.core.entity.Member::class,
-        OverwriteType.Member::class,
+        dev.kord.core.entity.Member::class
     ),
     Mentionable(
         ApplicationCommandOptionType.Mentionable::class,
         AuditLogChangeKey.Mentionable::class
     ),
     Channel(
-        dev.kord.core.entity.channel.Channel::class,
-        ApplicationCommandOptionType.Channel::class
+        dev.kord.core.entity.channel.Channel::class
     ),
     Role(
         dev.kord.core.entity.Role::class,
-        ApplicationCommandOptionType.Role::class,
-        OverwriteType.Role::class,
     ),
     SubCommand(
         dev.kord.common.entity.SubCommand::class,
-        ApplicationCommandOptionType.SubCommand::class,
-        dev.kord.core.entity.interaction.SubCommand::class,
     ),
     Group(
         GroupCommand::class

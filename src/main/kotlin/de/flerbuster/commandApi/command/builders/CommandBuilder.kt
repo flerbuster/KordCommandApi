@@ -2,20 +2,26 @@ package de.flerbuster.commandApi.command.builders
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
 import de.flerbuster.commandApi.command.arguments.argument.ArgumentBuilder
+import de.flerbuster.commandApi.command.arguments.argument.CustomArgument
 import de.flerbuster.commandApi.command.arguments.argument.CustomArgumentBuilder
+import de.flerbuster.commandApi.command.arguments.provider.ArgumentProvider
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.commands.Command
 import de.flerbuster.commandApi.command.commands.SlashCommand
 import de.flerbuster.commandApi.command.commands.MessageCommand
 import de.flerbuster.commandApi.command.options.BaseOptions
 import de.flerbuster.commandApi.errors.TypeNotSupportedError
+import de.flerbuster.commandApi.util.nullable
 import dev.kord.common.Locale
 import dev.kord.core.Kord
 import dev.kord.core.entity.KordEntity
 import dev.kord.rest.builder.interaction.BaseChoiceBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import io.ktor.utils.io.*
+import kotlinx.serialization.StringFormat
+import kotlinx.serialization.json.Json
 import kotlin.reflect.KClass
+
 
 /**
  * Base Builder class for [SlashCommand] and [MessageCommand]
@@ -45,7 +51,7 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
      */
     var descriptionLocalizations: MutableMap<Locale, String>? = null
 
-    internal var execution: suspend (interaction: IC, options: OC) -> Unit =
+    internal var execution: suspend ArgumentProvider.(interaction: IC, options: OC) -> Unit =
         { _, _ -> }
     internal val exceptionHandlers: HashMap<KClass<Exception>, suspend (
         exception: Exception,
@@ -57,7 +63,7 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
     /**
      * Sets the execution of the command.
      */
-    fun runs(block: suspend (IC, OC) -> Unit) {
+    fun runs(block: suspend ArgumentProvider.(IC, OC) -> Unit) {
         execution = block
     }
 
@@ -96,42 +102,53 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
     inline fun <reified T> argument(
         name: String,
         description: String,
+        forceRequire: Boolean? = null,
         noinline builder: BaseChoiceBuilder<T>.() -> Unit = { }
     ): Argument<T> {
-        return addArgument(name, description, builder as OptionsBuilder.() -> Unit)
+        return addArgument(name, description, builder as OptionsBuilder.() -> Unit, forceRequire)
     }
 
     inline fun <reified T> basicArgument(
         name: String,
         description: String,
+        forceRequire: Boolean? = null,
         noinline builder: OptionsBuilder.() -> Unit = { }
     ): Argument<T> {
-        return addArgument(name, description, builder)
+        return addArgument(name, description, builder, forceRequire)
     }
 
-    fun customArgument(
+
+    inline fun <reified T> customArgument(
         name: String,
         description: String,
-        builder: CustomArgumentBuilder.() -> Unit = { }
-    ): Argument<String> {
-        return argument(
+        stringFormat: StringFormat = Json,
+        builder: CustomArgumentBuilder<T>.() -> Unit = { }
+    ): CustomArgument<T> {
+        val customArgumentBuilder = CustomArgumentBuilder<T>(name, description, stringFormat).apply(builder)
+        val baseChoiceBuilder = customArgumentBuilder.toBaseChoiceBuilder()
+
+        argument(
             name,
             description,
-            CustomArgumentBuilder(name, description)
-                .apply(builder).toBaseChoiceBuilder()
+            !nullable<T>(),
+            baseChoiceBuilder
         )
+
+        return CustomArgument(stringFormat, name, baseChoiceBuilder, description)
     }
 
     inline fun <reified T> addArgument(
         name: String,
         description: String,
-        noinline builder: OptionsBuilder.() -> Unit = { }
+        noinline builder: OptionsBuilder.() -> Unit = { },
+        forceRequire: Boolean?
     ): Argument<T> {
         val argument = ArgumentBuilder<T>()
-            .apply { baseChoiceBuilder = {
-                required = defaultRequired
-                builder()
-            }
+            .apply {
+                baseChoiceBuilder = {
+                    builder()
+                    required = forceRequire ?: !nullable<T>()
+                }
             }.build(name, description).apply {
                 type = ArgumentType.from<T>()
                     ?: throw TypeNotSupportedError(T::class)

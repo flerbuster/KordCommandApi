@@ -14,5 +14,5 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("dev.kord:kord-core:0.13.1")
+    implementation("dev.kord:kord-core:0.14.0")
 }

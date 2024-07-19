@@ -1,10 +1,10 @@
 package de.flerbuster.commandApi.command.commands
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
-import de.flerbuster.exampleBot.Bot
 import dev.kord.core.Kord
 import dev.kord.core.entity.Entity
 import dev.kord.core.event.Event
+import dev.kord.core.on
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ sealed class Command<T : Command<T>> (
 
     @Suppress("UNCHECKED_CAST")
     suspend fun emitEvent(event: Event) {
-        (Bot.kord.events as MutableSharedFlow<Event>).emit(event)
+        (kord.events as MutableSharedFlow<Event>).emit(event)
     }
 
     fun register() = kord.launch {

@@ -1,6 +1,7 @@
 package de.flerbuster.commandApi.command.commands
 
 import de.flerbuster.commandApi.command.arguments.argument.Argument
+import de.flerbuster.commandApi.command.arguments.provider.ArgumentProvider
 import de.flerbuster.commandApi.command.events.MessageCommandAddEvent
 import de.flerbuster.commandApi.command.options.MessageCommandOptions
 import dev.kord.common.annotation.KordPreview
@@ -14,7 +15,7 @@ class MessageCommand(
     var prefix: String,
     override val name: String,
     override val description: String,
-    val execution: suspend (message: Message, options: MessageCommandOptions) -> Unit,
+    val execution: suspend ArgumentProvider.(message: Message, options: MessageCommandOptions) -> Unit,
     override val arguments: MutableList<Argument<*>>,
     private val exceptionHandling: HashMap<KClass<Exception>, suspend (
         exception: Exception,
@@ -36,7 +37,9 @@ class MessageCommand(
             if (!message.content.startsWith(commandName)) return@on
             MessageCommandOptions(message, this@MessageCommand) { options ->
                 try {
-                    execution(message, options)
+                    with(ArgumentProvider(options)) {
+                        execution(message, options)
+                    }
                 } catch (e: Exception) {
                     exceptionHandling.forEach { (type, handler) ->
                         if (type.isInstance(e)) {

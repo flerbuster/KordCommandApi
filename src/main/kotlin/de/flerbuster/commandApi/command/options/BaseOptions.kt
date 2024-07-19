@@ -60,6 +60,22 @@ sealed class BaseOptions {
      */
     abstract val attachments: Map<String, Attachment>
 
+    /**
+    * holding all arguments
+     */
+    val allArguments get() = mutableMapOf<String, Comparable<*>>().apply {
+        putAll(strings)
+        putAll(integers)
+        putAll(numbers)
+        putAll(booleans)
+        putAll(users)
+        putAll(members)
+        putAll(channels)
+        putAll(roles)
+        putAll(mentionables)
+        putAll(attachments)
+    }
+
     inline fun <reified T> custom(stringFormat: StringFormat = Json): HashMap<String, T> {
         val withTypeT = hashMapOf<String, T>()
 
@@ -74,11 +90,15 @@ sealed class BaseOptions {
     }
 
     operator fun <T : Comparable<T>> get(at: String): T? {
-        return (strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]) as? T
+        return (allArguments[at]) as? T
     }
 
     @JvmName("get2")
     operator fun get(at: String): Comparable<*>? {
-        return strings[at] ?: integers[at] ?: numbers[at] ?: booleans[at] ?: users[at] ?: members[at] ?: channels[at] ?: roles[at] ?: mentionables[at] ?: attachments[at]
+        return allArguments[at]
+    }
+
+    fun has(key: String): Boolean {
+        return allArguments.containsKey(key)
     }
 }

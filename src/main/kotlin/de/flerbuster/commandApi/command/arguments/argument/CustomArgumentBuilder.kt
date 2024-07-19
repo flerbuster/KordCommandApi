@@ -24,9 +24,10 @@ import kotlinx.serialization.json.Json
  *  used for building string arguments, with custom serialized values
  **/
 @KordDsl
-class CustomArgumentBuilder(
+class CustomArgumentBuilder<V>(
     override val name: String,
-    override val description: String
+    override val description: String,
+    val stringFormat: StringFormat = Json,
 ) : RequestBuilder<ApplicationCommandOption>, LocalizedNameBuilder, LocalizedDescriptionBuilder {
     /**
     *  from [dev.kord.rest.builder.interaction.OptionsBuilder]
@@ -85,10 +86,9 @@ class CustomArgumentBuilder(
      * @param nameLocalizations the name localizations of the choice
      * @param stringFormat the format of the value
      */
-    inline fun <reified T> choice(
+    inline fun <reified T : V> choice(
         name: String,
         value: T,
-        stringFormat: StringFormat = Json,
         localizationsBuilder: ChoiceLocalizationsBuilder.() -> Unit = { }
     ) {
         val builder = ChoiceLocalizationsBuilder(name).apply(localizationsBuilder)

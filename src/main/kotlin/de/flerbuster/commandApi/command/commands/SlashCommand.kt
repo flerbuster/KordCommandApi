@@ -2,6 +2,7 @@ package de.flerbuster.commandApi.command.commands
 
 import de.flerbuster.commandApi.cache.CommandCache
 import de.flerbuster.commandApi.command.arguments.argument.Argument
+import de.flerbuster.commandApi.command.arguments.provider.ArgumentProvider
 import de.flerbuster.commandApi.command.arguments.type.ArgumentType
 import de.flerbuster.commandApi.command.events.SlashCommandAddEvent
 import de.flerbuster.commandApi.command.options.SlashCommandOptions
@@ -20,7 +21,7 @@ class SlashCommand(
     override val name: String,
     override val description: String,
     override val arguments: MutableList<Argument<*>>,
-    private val execution: suspend (interaction: ChatInputCommandInteraction, options: SlashCommandOptions) -> Unit,
+    private val execution: suspend ArgumentProvider.(interaction: ChatInputCommandInteraction, options: SlashCommandOptions) -> Unit,
     private val exceptionHandling: HashMap<KClass<Exception>, suspend (
         exception: Exception,
         interaction: ChatInputCommandInteraction,
@@ -142,7 +143,10 @@ class SlashCommand(
         kord.on<ChatInputCommandInteractionCreateEvent>(kord) {
             try {
                 if (interaction.command.rootId == command.id) {
-                    execution(interaction, SlashCommandOptions(interaction.command))
+                    val options = SlashCommandOptions(interaction.command)
+                    with(ArgumentProvider(options)) {
+                        execution(interaction, options)
+                    }
                 }
             } catch (e: Exception) {
                 exceptionHandling.forEach { (type, handler) ->
