@@ -8,7 +8,7 @@ import dev.kord.rest.builder.interaction.BaseChoiceBuilder
  */
 open class Argument<T>(
     internal open val initialName: String,
-    open val builder: BaseChoiceBuilder<T>.() -> Unit,
+    open val builder: BaseChoiceBuilder<T, *>.() -> Unit,
     internal open val initialDescription: String
 ) {
     var type = ArgumentType.None

@@ -58,7 +58,10 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
         interaction: IC,
         command: T
     ) -> Unit> =
-        hashMapOf(Exception::class to { exception, _, command -> println("exception '${exception.message}' at command ${command.name}"); exception.printStack() })
+        hashMapOf(Exception::class to { exception, _, command ->
+            println("exception '${exception.message}' at command ${command.name}")
+            exception.printStackTrace()
+        })
 
     /**
      * Sets the execution of the command.
@@ -103,7 +106,7 @@ sealed class CommandBuilder<T : Command<*>, IC : KordEntity, OC : BaseOptions>(
         name: String,
         description: String,
         forceRequire: Boolean? = null,
-        noinline builder: BaseChoiceBuilder<T>.() -> Unit = { }
+        noinline builder: BaseChoiceBuilder<T, *>.() -> Unit = { }
     ): Argument<T> {
         return addArgument(name, description, builder as OptionsBuilder.() -> Unit, forceRequire)
     }

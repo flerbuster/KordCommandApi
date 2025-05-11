@@ -99,7 +99,7 @@ class CustomArgumentBuilder<V>(
     /**
      * converts the builder to a [BaseChoiceBuilder]
      */
-    fun toBaseChoiceBuilder(): BaseChoiceBuilder<String>.() -> Unit = {
+    fun toBaseChoiceBuilder(): BaseChoiceBuilder<String, *>.() -> Unit = {
         default = this@CustomArgumentBuilder.default
         required = this@CustomArgumentBuilder.required
         autocomplete = this@CustomArgumentBuilder.autocomplete

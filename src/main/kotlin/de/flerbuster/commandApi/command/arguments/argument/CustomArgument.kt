@@ -7,7 +7,7 @@ import kotlinx.serialization.StringFormat
 data class CustomArgument<T>(
     val format: StringFormat,
     override val initialName: String,
-    override val builder: BaseChoiceBuilder<String>.() -> Unit,
+    override val builder: BaseChoiceBuilder<String, *>.() -> Unit,
     override val initialDescription: String
 ) : Argument<String>(initialName, builder, initialDescription)
 
